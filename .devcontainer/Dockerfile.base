@@ -44,11 +44,35 @@ RUN apt-get update && \
     traceroute \
     jc \
     xdg-utils \
+    git \
+    curl \
+    wget \
+    zip \
+    unzip \
     && apt-get clean && \
     # Clean up APT cache and temporary files to reduce image size
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 # Reset DEBIAN_FRONTEND to default to allow interactive prompts if needed later
+
+# Install Node.js
+RUN curl -fsSL https://deb.nodesource.com/setup_lts.x | bash - && \
+    apt-get install -y nodejs && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
+
+# Install Azure CLI
+RUN curl -sL https://aka.ms/InstallAzureCLIDeb | bash
+
+# Install PowerShell
+RUN wget -q https://packages.microsoft.com/config/debian/12/packages-microsoft-prod.deb && \
+    dpkg -i packages-microsoft-prod.deb && \
+    apt-get update && \
+    apt-get install -y powershell && \
+    rm packages-microsoft-prod.deb && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
+
 ENV DEBIAN_FRONTEND=
 
 # Specify user as vscode for non-root operations if needed
